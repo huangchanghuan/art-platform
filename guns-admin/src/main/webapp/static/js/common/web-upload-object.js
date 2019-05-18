@@ -27,6 +27,7 @@
 		init : function() {
 			var uploader = this.create();
 			this.bindEvent(uploader);
+			console.log("结束初始化uploader")
 			return uploader;
 		},
 		
@@ -34,6 +35,7 @@
 		 * 创建webuploader对象
 		 */
 		create : function() {
+            console.log("开始创建webuploader");
 			var webUploader = WebUploader.create({
 				auto : true,
 				pick : {
@@ -52,7 +54,7 @@
 				server : this.uploadUrl,
 				fileSingleSizeLimit : this.fileSizeLimit
 			});
-			
+            console.log("结束创建webuploader");
 			return webUploader;
 		},
 

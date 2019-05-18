@@ -26,7 +26,10 @@ public class GunsProperties {
 
     private String fileUploadPath;
 
+    private String videoUploadPath;
+
     private Boolean haveCreatePath = false;
+    private Boolean haveCreateVideoPath = false;
 
     private Boolean springSessionOpen = false;
 
@@ -57,6 +60,28 @@ public class GunsProperties {
             }
             return fileUploadPath;
         }
+    }
+    public String getVideoUploadPath() {
+        //如果没有写文件上传路径,保存到临时目录
+        if (isEmpty(videoUploadPath)) {
+            return getTempPath();
+        } else {
+            //判断有没有结尾符,没有得加上
+            if (!videoUploadPath.endsWith(File.separator)) {
+                videoUploadPath = videoUploadPath + File.separator;
+            }
+            //判断目录存不存在,不存在得加上
+            if (!haveCreateVideoPath) {
+                File file = new File(videoUploadPath);
+                file.mkdirs();
+                haveCreateVideoPath = true;
+            }
+            return videoUploadPath;
+        }
+    }
+
+    public void setVideoUploadPath(String videoUploadPath) {
+        this.videoUploadPath = videoUploadPath;
     }
 
     public void setFileUploadPath(String fileUploadPath) {

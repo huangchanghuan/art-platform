@@ -1,0 +1,34 @@
+@layout("/common/_container.html"){
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <div class="form-horizontal">
+
+            <input type="hidden" id="id" value="${item.id}">
+
+            <div class="row">
+                <div class="col-sm-6 b-r">
+                            <#input id="id" name="" value="${item.id}" underline="true"/>
+                            <#input id="videoName" name="视频名称" value="${item.videoName}" underline="true"/>
+                            <#input id="videoUrl" name="视频地址" value="${item.videoUrl}" underline="true"/>
+                            <#input id="serviceCreator" name="创建人" value="${item.serviceCreator}" />
+                </div>
+
+                <div class="col-sm-6">
+                            <#input id="consumer" name="照片拥有者" value="${item.consumer}" underline="true"/>
+                            <#input id="account" name="所属平台用户" value="${item.account}" underline="true"/>
+                            <#input id="createDate" name="创建时间" value="${item.createDate}" />
+                </div>
+            </div>
+
+            <div class="row btn-group-m-t">
+                <div class="col-sm-10">
+                    <#button btnCss="info" name="提交" id="ensure" icon="fa-check" clickFun="VideoInfoInfoDlg.editSubmit()"/>
+                    <#button btnCss="danger" name="取消" id="cancel" icon="fa-eraser" clickFun="VideoInfoInfoDlg.close()"/>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="${ctxPath}/static/modular/video/videoInfo/videoInfo_info.js"></script>
+@}

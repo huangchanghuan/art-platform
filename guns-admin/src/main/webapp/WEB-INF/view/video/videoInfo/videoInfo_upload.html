@@ -1,0 +1,21 @@
+@layout("/common/_container.html"){
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <div class="form-horizontal">
+
+            <input type="hidden" id="id" value="">
+
+            <div id="uploader" class="wu-example">
+                <!--用来存放文件信息-->
+                <div id="fileList" class="uploader-list"></div>
+                <div class="btns">
+                    <div id="picker">选择文件</div>
+                    <button id="ctlBtn" class="btn btn-default">开始上传</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="${ctxPath}/static/modular/video/videoInfo/videoInfo_info.js"></script>
+@}
