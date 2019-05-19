@@ -36,6 +36,11 @@ public class VideoInfo extends Model<VideoInfo> {
     @TableField("video_url")
     private String videoUrl;
     /**
+     * 图片地址
+     */
+    @TableField("image_url")
+    private String imageUrl;
+    /**
      * 创建人
      */
     @TableField("service_creator")
@@ -54,6 +59,13 @@ public class VideoInfo extends Model<VideoInfo> {
     @TableField("create_date")
     private Date createDate;
 
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
 
     public Integer getId() {
         return id;

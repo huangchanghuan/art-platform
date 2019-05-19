@@ -7,6 +7,7 @@
         <id column="id" property="id" />
         <result column="video_name" property="videoName" />
         <result column="video_url" property="videoUrl" />
+        <result column="image_url" property="imageUrl" />
         <result column="service_creator" property="serviceCreator" />
         <result column="consumer" property="consumer" />
         <result column="account" property="account" />
@@ -15,7 +16,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, video_name AS videoName, video_url AS videoUrl, service_creator AS serviceCreator, consumer, account, create_date AS createDate
+        id, video_name AS videoName, video_url AS videoUrl, service_creator AS serviceCreator, consumer, account, create_date AS createDate, image_url AS imageUrl
     </sql>
 
 </mapper>

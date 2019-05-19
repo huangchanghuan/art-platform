@@ -5,18 +5,23 @@ import com.stylefeng.guns.config.properties.GunsProperties;
 import com.stylefeng.guns.core.base.controller.BaseController;
 import com.stylefeng.guns.core.common.exception.BizExceptionEnum;
 import com.stylefeng.guns.core.exception.GunsException;
-import com.stylefeng.guns.core.shiro.ShiroKit;
-import org.springframework.stereotype.Controller;
-import org.springframework.util.ResourceUtils;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.ui.Model;
-import org.springframework.beans.factory.annotation.Autowired;
 import com.stylefeng.guns.core.log.LogObjectHolder;
+import com.stylefeng.guns.core.shiro.ShiroKit;
+import com.stylefeng.guns.core.util.VideoUtil;
 import com.stylefeng.guns.modular.system.model.VideoInfo;
 import com.stylefeng.guns.modular.video.service.IVideoInfoService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -35,6 +40,7 @@ public class VideoInfoController extends BaseController {
     private IVideoInfoService videoInfoService;
     @Autowired
     private GunsProperties gunsProperties;
+
     /**
      * 跳转到视频管理首页
      */
@@ -53,6 +59,8 @@ public class VideoInfoController extends BaseController {
 
     /**
      * 上传视频
+     * 视频路径:
+     * 图片路径:
      */
     @RequestMapping(method = RequestMethod.POST, path = "/upload")
     @ResponseBody
@@ -62,33 +70,45 @@ public class VideoInfoController extends BaseController {
         String videoName = UUID.randomUUID().toString() + suffix;
         try {
             //生成视频路径
-            File path2 = new File(ResourceUtils.getURL("classpath:static").getPath().replace("%20"," ").replace('/', '\\'));
-            if(!path2.exists()) path2 = new File("");
-            File upload2 = new File(path2.getAbsolutePath(),"video");
-            if(!upload2.exists()) upload2.mkdirs();
-            String path=upload2.getAbsolutePath()+"\\";
+            String videoPath = gunsProperties.getVideoUploadPath();
             //完成视频上传
-            picture.transferTo(new File(path + videoName));
+            File file = new File(videoPath + videoName);
+            picture.transferTo(file);
             //生成图片路径
-            //截取图片存放的地址
-            String imgPath = path2.getAbsolutePath() + "/videoImages/";
-            File img = new File(imgPath);
-            if (!img.exists()) { img.mkdirs(); }
-            //调用截取视频第一帧的方法
-//            boolean falg = mediaService.executeCodecs(videoPath,imgPath,serialName);
+            String imgPath = gunsProperties.getFileUploadPath()+"videoImage/";
+            //调用截取视频第一帧图片
+            List<File> files = VideoUtil.fetchPicByCount(file, imgPath, 1);
+            //开始插入数据
+            VideoInfo videoInfo = new VideoInfo();
+            videoInfo.setAccount(ShiroKit.getUser().getAccount());
+            videoInfo.setConsumer("被拍待定");
+            videoInfo.setVideoName(picture.getOriginalFilename());
+            videoInfo.setVideoUrl("videoPath/"+videoName);
+            videoInfo.setImageUrl("videoImage/"+files.get(0).getName());
+            videoInfo.setServiceCreator(ShiroKit.getUser().getName());
+            videoInfoService.insert(videoInfo);
+            return videoName;
         } catch (Exception e) {
             e.printStackTrace();
             throw new GunsException(BizExceptionEnum.UPLOAD_ERROR);
         }
-        //开始插入数据
-        VideoInfo videoInfo = new VideoInfo();
-        videoInfo.setAccount(ShiroKit.getUser().getAccount());
-        videoInfo.setConsumer("被拍待定");
-        videoInfo.setVideoName(picture.getOriginalFilename());        videoInfo.setVideoUrl("/static/video/"+videoName);
-        videoInfo.setServiceCreator(ShiroKit.getUser().getName());
-        videoInfoService.insert(videoInfo);
-        return videoName;
     }
+
+//    /**
+//     * 图片下载
+//     * @param imageName
+//     * @param request
+//     * @param response
+//     * @return
+//     */
+//    @RequestMapping(value = "/show",method = RequestMethod.GET)
+//    public ResponseEntity downloadImage(String imageName, HttpServletRequest request, HttpServletResponse response) {
+//        try {
+//            return ResponseEntity.ok(resourceLoader.getResource("file:"+gunsProperties.getFileUploadPath()+imageName ));
+//        } catch (Exception e) {
+//            return ResponseEntity.notFound().build();
+//        }
+//    }
 
     /**
      * 跳转到上传视频管理

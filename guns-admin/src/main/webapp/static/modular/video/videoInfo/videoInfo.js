@@ -7,7 +7,7 @@ var VideoInfo = {
     table: null,
     layerIndex: -1
 };
-
+var gunsBasePath;
 /**
  * 初始化表格的列
  */
@@ -16,6 +16,7 @@ VideoInfo.initColumn = function () {
         {field: 'selectItem', radio: true},
             {title: '', field: 'id', visible: true, align: 'center', valign: 'middle'},
             {title: '视频名称', field: 'videoName', visible: true, align: 'center', valign: 'middle'},
+            {title: '图片地址', field: 'imageUrl', visible: true, align: 'center', valign: 'middle',formatter: operateImage},
             {title: '视频地址', field: 'videoUrl', visible: true, align: 'center', valign: 'middle',formatter: operateFormatter},
             {title: '创建人', field: 'serviceCreator', visible: true, align: 'center', valign: 'middle'},
             {title: '照片拥有者', field: 'consumer', visible: true, align: 'center', valign: 'middle'},
@@ -32,22 +33,41 @@ VideoInfo.initColumn = function () {
  * @returns {string}
  */
 function operateFormatter(value, row, index) {
-    console.log("生成二维码参数value:"+value)
-    console.log("生成二维码参数row:"+row)
-    console.log("生成二维码参数index:"+index)
-    var curWwwPath=window.document.location.href;
-    var pathName=window.document.location.pathname;
-    var pos=curWwwPath.indexOf(pathName);
-    var localhostPaht=curWwwPath.substring(0,pos);
-    console.log("生成二维码参数localhostPaht:"+localhostPaht)
-
     //根据value生成二维码
     var qrcode_html = '<div id="qrcode'+index+'"></div>\n' +
         '<script type="text/javascript">\n' +
-        'new QRCode(document.getElementById("qrcode' +index+'"), {text: "'+localhostPaht+value+'",width: 90,height: 90,colorDark : "#000000",colorLight : "#ffffff",correctLevel : QRCode.CorrectLevel.H}); ' +
+        'new QRCode(document.getElementById("qrcode' +index+'"), {text: "'+gunsBasePath+'/video/'+value+'",width: 90,height: 90,colorDark : "#000000",colorLight : "#ffffff",correctLevel : QRCode.CorrectLevel.H}); ' +
         '</script>';
     return qrcode_html;
 }
+/**
+ * 显示图片
+ * @param value
+ * @param row
+ * @param index
+ * @returns {string}
+ */
+function operateImage(value, row, index) {
+    //html
+    var html = '<img style="height:100px;" src="'+gunsBasePath+'/image/'+value+'" />';
+    return html;
+}
+
+function getBasePath(){
+    //获取当前网址，如： http://localhost:8080/ems/Pages/Basic/Person.jsp
+    var curWwwPath = window.document.location.href;
+    //获取主机地址之后的目录，如： /ems/Pages/Basic/Person.jsp
+    var pathName = window.document.location.pathname;
+    var pos = curWwwPath.indexOf(pathName);
+    //获取主机地址，如： http://localhost:8080
+    var localhostPath = curWwwPath.substring(0, pos);
+    //获取带"/"的项目名，如：/ems
+    var projectName = pathName.substring(0, pathName.substr(1).indexOf('/') + 1);
+    //获取项目的basePath   http://localhost:8080/ems/
+    var basePath=localhostPath+projectName;
+    return basePath;
+}
+
 
 /**
  * 检查是否选中
@@ -98,6 +118,7 @@ VideoInfo.openVideoInfoDetail = function () {
  * 打开上传窗口
  */
 VideoInfo.openVideoInfoUpload = function () {
+    console.log("路径:" + Feng.ctxPath);
     var index = layer.open({
         type: 2,
         title: '视频管理上传',
@@ -156,4 +177,6 @@ $(function () {
     var table = new BSTable(VideoInfo.id, "/videoInfo/list", defaultColunms);
     table.setPaginationType("client");
     VideoInfo.table = table.init();
+    gunsBasePath = getBasePath();
+
 });

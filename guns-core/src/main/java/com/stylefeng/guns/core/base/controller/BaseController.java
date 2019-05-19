@@ -54,7 +54,9 @@ public class BaseController {
     protected Integer getSystemInvokCount() {
         return (Integer) this.getHttpServletRequest().getServletContext().getAttribute("systemCount");
     }
-
+    protected String getBasePath(){
+        return getHttpServletRequest().getScheme() + "://" + getHttpServletRequest().getServerName() + ":" + getHttpServletRequest().getServerPort() + getHttpServletRequest().getContextPath() + "/";
+    }
     /**
      * 把service层的分页信息，封装为bootstrap table通用的分页封装
      */

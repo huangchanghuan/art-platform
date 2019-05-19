@@ -19,6 +19,18 @@ public class VideoUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(VideoUtil.class);
 
+    public static void main(String[] args) {
+        try {
+            //getList(10,113);
+
+            File file = new File("C:\\Users\\Administrator\\Desktop\\1F181E3D-9C29-47B0-B0AB-B35EB78F7680.mp4");
+            List<File> files = VideoUtil.fetchPicByCount(file, "C:\\Users\\Administrator\\Desktop\\233", 1);
+            System.out.println(files.get(0).getName());
+            System.out.println(VideoUtil.getVideoTime(file));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     /**
      * 获取指定视频的帧并保存为图片至指定目录
      *
@@ -59,13 +71,13 @@ public class VideoUtil {
         if (count > length) {
             count = length;
         }
-        System.out.println(length);
-        System.out.println(count);
+//        System.out.println(length);
+//        System.out.println(count);
         int total = (int) (length / count);
         List<Integer> list = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             list.add(i * total);
-            System.out.println(i * total);
+//            System.out.println(i * total);
         }
         return list;
     }
@@ -80,11 +92,11 @@ public class VideoUtil {
         int frameLength = ff.getLengthInFrames();
 
 
-        System.out.println("length:" + frameLength);
+//        System.out.println("length:" + frameLength);
 
         List<Integer> list = getList(count, frameLength);
 
-        System.out.println(ff.getFrameRate());
+//        System.out.println(ff.getFrameRate());
 
         int i = 0;
         Frame frame = null;
@@ -93,7 +105,7 @@ public class VideoUtil {
             frame = ff.grabImage();
             if (list.contains(i)) {
                 if (frame != null && frame.image != null) {
-                    System.out.println(i);
+//                    System.out.println(i);
                     files.add(writeToFile(frame, saveFile, i));
                 }
             }
@@ -105,10 +117,11 @@ public class VideoUtil {
 
 
     public static File writeToFile(Frame frame, String saveFile, int second) throws IOException {
+        File img = new File(saveFile);
+        if (!img.exists()) { img.mkdirs();}
         String fileName = String.valueOf(System.currentTimeMillis()) + second;
         File targetFile = new File(saveFile + File.separator + fileName + ".jpg");
         String imgSuffix = "jpg";
-
         Java2DFrameConverter converter = new Java2DFrameConverter();
         BufferedImage srcBi = converter.getBufferedImage(frame);
         int owidth = srcBi.getWidth();
@@ -219,16 +232,4 @@ public class VideoUtil {
         opencv_highgui.cvReleaseCapture(capture);
     }*/
 
-    public static void main(String[] args) {
-        try {
-            //getList(10,113);
-
-            File file = new File("C:\\Users\\Administrator\\Desktop\\F.mp4");
-            List<File> files = VideoUtil.fetchPicByCount(file, "C:\\Users\\Administrator\\Desktop\\233", 100);
-            System.out.println(files.get(0).getName());
-            System.out.println(VideoUtil.getVideoTime(file));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }

@@ -3,6 +3,7 @@ package com.stylefeng.guns.config.properties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 
 import static com.stylefeng.guns.core.util.ToolUtil.getTempPath;
@@ -24,12 +25,15 @@ public class GunsProperties {
 
     private Boolean swaggerOpen = false;
 
+    private String ipPortProjectPath;
     private String fileUploadPath;
 
     private String videoUploadPath;
+    private String videoImagePath;
 
     private Boolean haveCreatePath = false;
     private Boolean haveCreateVideoPath = false;
+    private Boolean haveCreateVideoImagePath = false;
 
     private Boolean springSessionOpen = false;
 
@@ -78,6 +82,37 @@ public class GunsProperties {
             }
             return videoUploadPath;
         }
+    }
+
+    public String getVideoImagePath() {
+        //如果没有写文件上传路径,保存到临时目录
+        if (isEmpty(videoImagePath)) {
+            return getTempPath();
+        } else {
+            //判断有没有结尾符,没有得加上
+            if (!videoImagePath.endsWith(File.separator)) {
+                videoImagePath = videoImagePath + File.separator;
+            }
+            //判断目录存不存在,不存在得加上
+            if (!haveCreateVideoImagePath) {
+                File file = new File(videoImagePath);
+                file.mkdirs();
+                haveCreateVideoImagePath = true;
+            }
+            return videoImagePath;
+        }
+    }
+
+    public String getIpPortProjectPath(HttpServletRequest request) {
+        return ipPortProjectPath;
+    }
+
+    public void setIpPortProjectPath(String ipPortProjectPath) {
+        this.ipPortProjectPath = ipPortProjectPath;
+    }
+
+    public void setVideoImagePath(String videoImagePath) {
+        this.videoImagePath = videoImagePath;
     }
 
     public void setVideoUploadPath(String videoUploadPath) {

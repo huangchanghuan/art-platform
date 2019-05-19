@@ -109,6 +109,11 @@ $(function() {
         fileVal:'file',
         // 选择文件的按钮。可选。
         // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+        accept: {
+            title:'Files',
+            extensions:'*' ,
+            mimeTypes: 'video/*'
+        },
         pick:
             {
                 multiple: true,

@@ -167,7 +167,30 @@
             <artifactId>commons-lang3</artifactId>
         </dependency>
     </dependencies>
+    <profiles>
+        <profile>
+            <!-- 本地开发环境 -->
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+            <filters>
+                <filter>${basedir}/filters/dev/application.properties</filter>
+            </filters>
+            </build>
+        </profile>
 
+        <profile>
+            <!-- 生产环境 -->
+            <id>prod</id>
+            <build>
+            <filters>
+                <filter>${basedir}/filters/prod/application.properties</filter>
+            </filters>
+            </build>
+        </profile>
+    </profiles>
     <build>
         <plugins>
             <plugin>
@@ -185,7 +208,26 @@
             </resource>
             <resource>
                 <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.yml</include>
+                </includes>
+                <filtering>true</filtering>
             </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.properties</include>
+                </includes>
+                <filtering>false</filtering>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+                <filtering>false</filtering>
+            </resource>
+
             <resource>
                 <directory>src/main/java</directory>
                 <includes>
