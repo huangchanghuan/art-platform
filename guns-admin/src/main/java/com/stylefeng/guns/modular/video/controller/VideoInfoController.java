@@ -61,16 +61,21 @@ public class VideoInfoController extends BaseController {
         String suffix = picture.getOriginalFilename().substring(picture.getOriginalFilename().lastIndexOf("."));
         String videoName = UUID.randomUUID().toString() + suffix;
         try {
-            //路径
+            //生成视频路径
             File path2 = new File(ResourceUtils.getURL("classpath:static").getPath().replace("%20"," ").replace('/', '\\'));
             if(!path2.exists()) path2 = new File("");
-            //如果上传目录为/static/images/upload/，则可以如下获取：
             File upload2 = new File(path2.getAbsolutePath(),"video");
             if(!upload2.exists()) upload2.mkdirs();
             String path=upload2.getAbsolutePath()+"\\";
-            //完成上传
-//            String fileSavePath = gunsProperties.getVideoUploadPath();
+            //完成视频上传
             picture.transferTo(new File(path + videoName));
+            //生成图片路径
+            //截取图片存放的地址
+            String imgPath = path2.getAbsolutePath() + "/videoImages/";
+            File img = new File(imgPath);
+            if (!img.exists()) { img.mkdirs(); }
+            //调用截取视频第一帧的方法
+//            boolean falg = mediaService.executeCodecs(videoPath,imgPath,serialName);
         } catch (Exception e) {
             e.printStackTrace();
             throw new GunsException(BizExceptionEnum.UPLOAD_ERROR);
