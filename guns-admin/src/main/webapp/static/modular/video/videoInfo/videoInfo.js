@@ -16,13 +16,38 @@ VideoInfo.initColumn = function () {
         {field: 'selectItem', radio: true},
             {title: '', field: 'id', visible: true, align: 'center', valign: 'middle'},
             {title: '视频名称', field: 'videoName', visible: true, align: 'center', valign: 'middle'},
-            {title: '视频地址', field: 'videoUrl', visible: true, align: 'center', valign: 'middle'},
+            {title: '视频地址', field: 'videoUrl', visible: true, align: 'center', valign: 'middle',formatter: operateFormatter},
             {title: '创建人', field: 'serviceCreator', visible: true, align: 'center', valign: 'middle'},
             {title: '照片拥有者', field: 'consumer', visible: true, align: 'center', valign: 'middle'},
             {title: '所属平台用户', field: 'account', visible: true, align: 'center', valign: 'middle'},
             {title: '创建时间', field: 'createDate', visible: true, align: 'center', valign: 'middle'}
     ];
 };
+
+/**
+ * 生成二维码
+ * @param value
+ * @param row
+ * @param index
+ * @returns {string}
+ */
+function operateFormatter(value, row, index) {
+    console.log("生成二维码参数value:"+value)
+    console.log("生成二维码参数row:"+row)
+    console.log("生成二维码参数index:"+index)
+    var curWwwPath=window.document.location.href;
+    var pathName=window.document.location.pathname;
+    var pos=curWwwPath.indexOf(pathName);
+    var localhostPaht=curWwwPath.substring(0,pos);
+    console.log("生成二维码参数localhostPaht:"+localhostPaht)
+
+    //根据value生成二维码
+    var qrcode_html = '<div id="qrcode'+index+'"></div>\n' +
+        '<script type="text/javascript">\n' +
+        'new QRCode(document.getElementById("qrcode' +index+'"), {text: "'+localhostPaht+value+'",width: 90,height: 90,colorDark : "#000000",colorLight : "#ffffff",correctLevel : QRCode.CorrectLevel.H}); ' +
+        '</script>';
+    return qrcode_html;
+}
 
 /**
  * 检查是否选中
@@ -131,7 +156,4 @@ $(function () {
     var table = new BSTable(VideoInfo.id, "/videoInfo/list", defaultColunms);
     table.setPaginationType("client");
     VideoInfo.table = table.init();
-
-
-
 });

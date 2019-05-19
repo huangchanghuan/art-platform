@@ -7,6 +7,7 @@ import com.stylefeng.guns.core.common.exception.BizExceptionEnum;
 import com.stylefeng.guns.core.exception.GunsException;
 import com.stylefeng.guns.core.shiro.ShiroKit;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,9 +61,16 @@ public class VideoInfoController extends BaseController {
         String suffix = picture.getOriginalFilename().substring(picture.getOriginalFilename().lastIndexOf("."));
         String videoName = UUID.randomUUID().toString() + suffix;
         try {
+            //路径
+            File path2 = new File(ResourceUtils.getURL("classpath:static").getPath().replace("%20"," ").replace('/', '\\'));
+            if(!path2.exists()) path2 = new File("");
+            //如果上传目录为/static/images/upload/，则可以如下获取：
+            File upload2 = new File(path2.getAbsolutePath(),"video");
+            if(!upload2.exists()) upload2.mkdirs();
+            String path=upload2.getAbsolutePath()+"\\";
             //完成上传
-            String fileSavePath = gunsProperties.getVideoUploadPath();
-            picture.transferTo(new File(fileSavePath + videoName));
+//            String fileSavePath = gunsProperties.getVideoUploadPath();
+            picture.transferTo(new File(path + videoName));
         } catch (Exception e) {
             e.printStackTrace();
             throw new GunsException(BizExceptionEnum.UPLOAD_ERROR);
@@ -71,8 +79,7 @@ public class VideoInfoController extends BaseController {
         VideoInfo videoInfo = new VideoInfo();
         videoInfo.setAccount(ShiroKit.getUser().getAccount());
         videoInfo.setConsumer("被拍待定");
-        videoInfo.setVideoName(picture.getOriginalFilename());
-        videoInfo.setVideoUrl(videoName);
+        videoInfo.setVideoName(picture.getOriginalFilename());        videoInfo.setVideoUrl("/static/video/"+videoName);
         videoInfo.setServiceCreator(ShiroKit.getUser().getName());
         videoInfoService.insert(videoInfo);
         return videoName;
