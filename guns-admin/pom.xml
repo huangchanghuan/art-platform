@@ -190,6 +190,15 @@
             </filters>
             </build>
         </profile>
+        <profile>
+            <!-- 生产环境 -->
+            <id>produce</id>
+            <build>
+                <filters>
+                    <filter>${basedir}/filters/produce/application.properties</filter>
+                </filters>
+            </build>
+        </profile>
     </profiles>
     <build>
         <plugins>

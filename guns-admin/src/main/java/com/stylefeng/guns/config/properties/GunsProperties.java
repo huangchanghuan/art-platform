@@ -30,6 +30,7 @@ public class GunsProperties {
 
     private String videoUploadPath;
     private String videoImagePath;
+    private String resourceLocations;
 
     private Boolean haveCreatePath = false;
     private Boolean haveCreateVideoPath = false;
@@ -105,6 +106,14 @@ public class GunsProperties {
 
     public String getIpPortProjectPath(HttpServletRequest request) {
         return ipPortProjectPath;
+    }
+
+    public String getResourceLocations() {
+        return resourceLocations;
+    }
+
+    public void setResourceLocations(String resourceLocations) {
+        this.resourceLocations = resourceLocations;
     }
 
     public void setIpPortProjectPath(String ipPortProjectPath) {

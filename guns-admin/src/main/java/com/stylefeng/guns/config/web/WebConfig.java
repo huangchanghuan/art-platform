@@ -7,9 +7,12 @@ import com.alibaba.druid.support.spring.stat.BeanTypeAutoProxyCreator;
 import com.alibaba.druid.support.spring.stat.DruidStatInterceptor;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.google.code.kaptcha.util.Config;
+import com.stylefeng.guns.GunsApplication;
 import com.stylefeng.guns.config.properties.GunsProperties;
 import com.stylefeng.guns.core.listener.ConfigListener;
 import com.stylefeng.guns.core.xss.XssFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.aop.Advisor;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
 import org.springframework.aop.support.JdkRegexpMethodPointcut;
@@ -34,7 +37,7 @@ import java.util.Properties;
  */
 @Configuration
 public class WebConfig extends WebMvcConfigurerAdapter {
-
+    private final static Logger logger = LoggerFactory.getLogger(WebConfig.class);
     @Autowired
     private GunsProperties gunsProperties;
 
@@ -50,8 +53,9 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         //图片
         //上传的图片在D盘下的OTA目录下，访问路径如：http://localhost:8081/OTA/d3cf0281-bb7f-40e0-ab77-406db95ccf2c.jpg
         //其中OTA表示访问的前缀。"file:D:/OTA/"是文件真实的存储路径
-        registry.addResourceHandler("/image/**").addResourceLocations("file:C:/guns/");
-        registry.addResourceHandler("/video/**").addResourceLocations("file:C:/guns/");
+        logger.info("初始化虚拟图片路径(必须斜杠结尾):{}",gunsProperties.getResourceLocations());
+        registry.addResourceHandler("/image/**").addResourceLocations(gunsProperties.getResourceLocations());
+        registry.addResourceHandler("/video/**").addResourceLocations(gunsProperties.getResourceLocations());
     }
 
     /**
