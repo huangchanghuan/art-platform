@@ -23,7 +23,7 @@ public class VideoUtil {
         try {
             //getList(10,113);
 
-            File file = new File("C:\\Users\\Administrator\\Desktop\\1F181E3D-9C29-47B0-B0AB-B35EB78F7680.mp4");
+            File file = new File("C:\\Users\\Administrator\\Desktop\\AAAA.mp4");
             List<File> files = VideoUtil.fetchPicByCount(file, "C:\\Users\\Administrator\\Desktop\\233", 1);
             System.out.println(files.get(0).getName());
             System.out.println(VideoUtil.getVideoTime(file));
@@ -101,16 +101,16 @@ public class VideoUtil {
         int i = 0;
         Frame frame = null;
 
-        while (i < frameLength) {
-            frame = ff.grabImage();
-            if (list.contains(i)) {
-                if (frame != null && frame.image != null) {
+
+        frame = ff.grabImage();
+        if (list.contains(i)) {
+            if (frame != null && frame.image != null) {
 //                    System.out.println(i);
-                    files.add(writeToFile(frame, saveFile, i));
-                }
+                files.add(writeToFile(frame, saveFile, i));
             }
-            i++;
         }
+
+
         ff.stop();
         return files;
     }
@@ -133,6 +133,7 @@ public class VideoUtil {
         bi.getGraphics().drawImage(srcBi.getScaledInstance(width, height, Image.SCALE_SMOOTH), 0, 0, null);
 
         ImageIO.write(bi, imgSuffix, targetFile);
+
 
         return targetFile;
     }
