@@ -127,7 +127,7 @@ public class VideoUtil {
         int owidth = srcBi.getWidth();
         int oheight = srcBi.getHeight();
         // 对截取的帧进行等比例缩放
-        int width = 800;
+        int width = 544;
         int height = (int) (((double) width / owidth) * oheight);
         BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
         bi.getGraphics().drawImage(srcBi.getScaledInstance(width, height, Image.SCALE_SMOOTH), 0, 0, null);
